@@ -15,20 +15,21 @@ def lower_left_point(raster):
 	:return: 
 	"""
 
-	ras = arcpy.Raster(raster)
+	if type(raster) is not arcpy.Raster:
+		ras = arcpy.Raster(raster)
+	else:
+		ras = raster
 	x = ras.extent.XMin + ras.meanCellWidth
 	y = ras.extent.YMin + ras.meanCellHeight
 	return arcpy.Point(x, y)
 
-def make_annual(raster, year,):
+def make_annual(raster_path, year,):
 	"""
 		Takes a 12 band monthly raster for a model and sums it (weighting appropriately by
 		number of days in a month, then returns a new raster object
 	:param rasters: 
 	:return: 
 	"""
-
-	raster_path = os.path.join(os.getcwd(), "spatial_comparisons", raster)
 
 	arcpy.env.outputCoordinateSystem = raster_path
 	arcpy.env.cellSize = raster_path
@@ -40,7 +41,7 @@ def make_annual(raster, year,):
 
 	lower_left = lower_left_point(raster_path)
 
-	desc = arcpy.Describe(r"{}\Band_1".format(raster_path))  # need to get a band for cell sizes
+	desc = arcpy.Describe(os.path.join(str(raster_path), "Band_1"))  # need to get a band for cell sizes
 	try:
 		cell_width = desc.meanCellWidth
 		cell_height = desc.meanCellHeight
@@ -51,30 +52,45 @@ def make_annual(raster, year,):
 
 	return annual_raster
 
-def get_statistics_for_year(rasters, year, mean_path, std_path):
+def get_statistics_for_year(rasters, year, mean_path, std_path, raster_base_path=os.path.join(os.getcwd(), "spatial_comparisons",)):
 	"""
 		This is the function that does the heavy lifting - given a list of 12 band model rasters and the water year they are
 		for, this calls the code necessary to generate the annual means and standard deviations.
-	:param rasters: 
-	:param year: 
-	:param mean_path: 
-	:param std_path: 
+	:param rasters: the list of rasters to use - check the global rasters object for definitions to pass in for various years
+	:param year: the year the list of rasters represents
+	:param mean_path: the path to output the mean raster to
+	:param std_path: the path to output the standard deviation raster to
 	:return: 
 	"""
 	summed_rasters = []
 	for raster in rasters:
-		summed_rasters.append(make_annual(raster, year))
+		if type(raster) is not arcpy.Raster:
+			raster_path = os.path.join(raster_base_path, raster)
+		else:
+			raster_path = raster
 
-	mean_raster = arcpy.sa.CellStatistics(summed_rasters, "MEAN", "NODATA")
-	std_raster = arcpy.sa.CellStatistics(summed_rasters, "STD", "NODATA")
+		summed_rasters.append(make_annual(raster_path, year))
 
-	mean_raster.save(mean_path)
-	std_raster.save(std_path)
+	arcpy.CheckOutExtension("Spatial")
+	try:
 
+		mean_raster = arcpy.sa.CellStatistics(summed_rasters, "MEAN", "NODATA")
+		std_raster = arcpy.sa.CellStatistics(summed_rasters, "STD", "NODATA")
+
+		mean_raster.save(mean_path)
+		std_raster.save(std_path)
+	finally:
+		arcpy.CheckInExtension("Spatial")
 
 
 def get_days_in_month_by_band_and_year(band, year):
-	# bands ordered by water year, starting with October - this function handles leap years
+	"""
+		Given a month and a year, returns the number of days - there's probably a builtin for this somewhere, but it was quick to implement and
+		I'd have needed to translate bands to months anyway.
+	:param band: 
+	:param year: 
+	:return: 
+	"""
 	band_month_days = {0: 31,  # October
 					   1: 30,  # November
 					   2: 31,  # December
