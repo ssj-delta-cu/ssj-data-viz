@@ -4,9 +4,14 @@ import tempfile
 import arcpy
 import numpy as np
 
+import amaptor
+
 rasters = {2015: ["itrc_et_wy2015_v2-1-0.tif", "ucd-pt_et_wy2015_v2-2-0.tif", "ucd-metric_et_wy2015_v2-0-0.tif", "sims_et_wy2015_v2-0-0.tif", "disalexi_et_wy2015_v2-1-0.tif"],
 		   2016: ["itrc_et_wy2016_v2-1-0.tif", "ucd-pt_et_wy2016_v2-2-0.tif", "ucd-metric_et_wy2016_v2-0-0.tif", "sims_et_wy2016_v2-0-0.tif", "disalexi_et_wy2016_v2-1-0.tif"]}
 
+base_folder = os.path.split(os.path.abspath(__file__))[0]
+template = os.path.join(base_folder, "templates", "map-template", "map-template.mxd")
+outputs = os.path.join(base_folder, "outputs")
 
 def lower_left_point(raster):
 	"""
@@ -82,6 +87,17 @@ def get_statistics_for_year(rasters, year, mean_path, std_path, raster_base_path
 	finally:
 		arcpy.CheckInExtension("Spatial")
 
+	return mean_raster, std_raster
+
+def make_comparison_maps(mean_raster, std_raster, output_path, map_template=template, ):
+	template = amaptor.Project(map_template)
+	main_map = template.active_map
+
+	mean_layer = "Model Annual Means"
+	arcpy.MakeRasterLayer_management(mean_raster, mean_layer)
+
+	main_map.insert_layer_by_name_or_path(mean_layer, "DeltaServiceArea", insert_position="AFTER")
+	main_map.export_png(output_path)
 
 def get_days_in_month_by_band_and_year(band, year):
 	"""
