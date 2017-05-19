@@ -16,6 +16,7 @@ class DateTest(unittest.TestCase):
 
 
 class GenerateDataTest(unittest.TestCase):
+	"""
 	def test_mean(self):
 
 		zero_lists = [[[1,1,1],
@@ -49,15 +50,15 @@ class GenerateDataTest(unittest.TestCase):
 		print(std_dev_raster)
 
 		g.get_statistics_for_year(rasters, 2016, mean_raster, std_dev_raster)
-
+	"""
 	def test_run_real_data(self):
 		base_path = os.path.split(os.path.split(__file__)[0])[0]
-		mean_output_2015 = os.path.join(base_path, "outputs", "2015_mean.tif")
-		std_output_2015 = os.path.join(base_path, "outputs", "2015_std.tif")
-		mean_output_2016 = os.path.join(base_path, "outputs", "2016_mean.tif")
-		std_output_2016 = os.path.join(base_path, "outputs", "2016_std.tif")
-		g.get_statistics_for_year(g.rasters[2015], 2015, mean_path=mean_output_2015, std_path=std_output_2015, raster_base_path=os.path.join(base_path, "spatial_comparisons"))
-		g.get_statistics_for_year(g.rasters[2016], 2016, mean_path=mean_output_2016, std_path=std_output_2016, raster_base_path=os.path.join(base_path, "spatial_comparisons"))
+		mean_output_2015 = os.path.join(base_path, "outputs", "2015_mean_test.tif")
+		std_output_2015 = os.path.join(base_path, "outputs", "2015_std_test.tif")
+		mean_output_2016 = os.path.join(base_path, "outputs", "2016_mean_test.tif")
+		std_output_2016 = os.path.join(base_path, "outputs", "2016_std_test.tif")
+		g.get_statistics_for_year(g.rasters[2015], 2015, mean_path=mean_output_2015, std_path=std_output_2015, raster_base_path=os.path.join(base_path, "spatial_comparisons"), debug=True)
+		g.get_statistics_for_year(g.rasters[2016], 2016, mean_path=mean_output_2016, std_path=std_output_2016, raster_base_path=os.path.join(base_path, "spatial_comparisons"), debug=True)
 
 
 

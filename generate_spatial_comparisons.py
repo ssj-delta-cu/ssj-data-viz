@@ -4,7 +4,7 @@ import tempfile
 import arcpy
 import numpy as np
 
-import amaptor
+#import amaptor
 
 rasters = {2015: ["itrc_et_wy2015_v2-1-0.tif", "ucd-pt_et_wy2015_v2-2-0.tif", "ucd-metric_et_wy2015_v2-0-0.tif", "sims_et_wy2015_v2-0-0.tif", "disalexi_et_wy2015_v2-1-0.tif"],
 		   2016: ["itrc_et_wy2016_v2-1-0.tif", "ucd-pt_et_wy2016_v2-2-0.tif", "ucd-metric_et_wy2016_v2-0-0.tif", "sims_et_wy2016_v2-0-0.tif", "disalexi_et_wy2016_v2-1-0.tif"]}
@@ -57,7 +57,7 @@ def make_annual(raster_path, year,):
 
 	return annual_raster
 
-def get_statistics_for_year(rasters, year, mean_path, std_path, raster_base_path=os.path.join(os.getcwd(), "spatial_comparisons",)):
+def get_statistics_for_year(rasters, year, mean_path, std_path, raster_base_path=os.path.join(base_folder, "spatial_comparisons",), debug=False):
 	"""
 		This is the function that does the heavy lifting - given a list of 12 band model rasters and the water year they are
 		for, this calls the code necessary to generate the annual means and standard deviations.
@@ -65,6 +65,8 @@ def get_statistics_for_year(rasters, year, mean_path, std_path, raster_base_path
 	:param year: the year the list of rasters represents
 	:param mean_path: the path to output the mean raster to
 	:param std_path: the path to output the standard deviation raster to
+	:param raster_base_path: The folder that the rasters in the list live in
+	:param debug: 
 	:return: 
 	"""
 	summed_rasters = []
@@ -75,6 +77,12 @@ def get_statistics_for_year(rasters, year, mean_path, std_path, raster_base_path
 			raster_path = raster
 
 		summed_rasters.append(make_annual(raster_path, year))
+
+	if debug:
+		for raster in summed_rasters:
+			output = tempfile.mktemp(prefix="summed_", suffix=os.path.split(str(raster))[1])  # add the original filename to the end
+			raster.save(output)
+			print("Composite Output at {}".format(output))
 
 	arcpy.CheckOutExtension("Spatial")
 	try:
@@ -89,6 +97,7 @@ def get_statistics_for_year(rasters, year, mean_path, std_path, raster_base_path
 
 	return mean_raster, std_raster
 
+"""
 def make_comparison_maps(mean_raster, std_raster, output_path, map_template=template, ):
 	template = amaptor.Project(map_template)
 	main_map = template.active_map
@@ -98,6 +107,7 @@ def make_comparison_maps(mean_raster, std_raster, output_path, map_template=temp
 
 	main_map.insert_layer_by_name_or_path(mean_layer, "DeltaServiceArea", insert_position="AFTER")
 	main_map.export_png(output_path)
+"""
 
 def get_days_in_month_by_band_and_year(band, year):
 	"""
