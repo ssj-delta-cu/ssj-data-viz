@@ -1,13 +1,19 @@
 import os
 import tempfile
+import six
 
 import arcpy
 import numpy as np
 
+if six.PY2:
+	from Tkinter import askFileDialog as filedialog
+elif six.PY3:
+	from tkinter import filedialog
+
 #import amaptor
 
-rasters = {2015: ["itrc_et_wy2015_v2-1-0.tif", "ucd-pt_et_wy2015_v2-2-0.tif", "ucd-metric_et_wy2015_v2-0-0.tif", "sims_et_wy2015_v2-0-0.tif", "disalexi_et_wy2015_v2-1-0.tif"],
-		   2016: ["itrc_et_wy2016_v2-1-0.tif", "ucd-pt_et_wy2016_v2-2-0.tif", "ucd-metric_et_wy2016_v2-0-0.tif", "sims_et_wy2016_v2-0-0.tif", "disalexi_et_wy2016_v2-1-0.tif"]}
+rasters = {2015: ["itrc_et_wy2015_v2-1-0.tif", "ucd-pt_et_wy2015_v2-2-0.tif", "ucd-metric_et_wy2015_v2-0-0.tif", "sims_et_wy2015_v2-0-0.tif", "disalexi_et_wy2015_v2-1-0.tif", "calsimetaw_et_wy2015_v2-0-0.tif", "detaw_et_wy2015.tif"],
+		   2016: ["itrc_et_wy2016_v2-1-0.tif", "ucd-pt_et_wy2016_v2-2-0.tif", "ucd-metric_et_wy2016_v2-0-0.tif", "sims_et_wy2016_v2-0-0.tif", "disalexi_et_wy2016_v2-1-0.tif", "calsimetaw_et_wy2016_v2-0-2.tif", "detaw_et_wy2016.tif"]}
 
 base_folder = os.path.split(os.path.abspath(__file__))[0]
 template = os.path.join(base_folder, "templates", "map-template", "map-template.mxd")
@@ -41,7 +47,8 @@ def make_annual(raster_path, year,):
 
 	np_ras = arcpy.RasterToNumPyArray(raster_path)
 	for band_index, band in enumerate(np_ras):
-		np_ras[band_index] = np.multiply(band, get_days_in_month_by_band_and_year(band_index, year))  # multiply the band by the number of days in the month and replace it
+		zero_fixed = np.where(band < 0, 0, band)  # take the input data and set all locations that are less than 0 ET to 0 and leave everything above 0 as is
+		np_ras[band_index] = np.multiply(zero_fixed, get_days_in_month_by_band_and_year(band_index, year))  # multiply the band by the number of days in the month and replace it
 	summed_months = np.sum(np_ras, axis=0)  # sum the bands together into one
 
 	lower_left = lower_left_point(raster_path)
@@ -131,3 +138,15 @@ def get_days_in_month_by_band_and_year(band, year):
 					   11: 30   # September
 					}
 	return band_month_days[band]
+
+
+if __name__ == "__main__":
+	print("Look for window asking for output directory, and choose output directory for rasters there")
+	output_folder = filedialog.askdirectory(title="Choose output folder to save summary rasters to")
+
+	for year in rasters:  # runs for all years configured in rasters variable, outputing to selected folder
+		year_mean = os.path.join(output_folder, "{}_mean.tif".format(year))
+		year_std = os.path.join(output_folder, "{}_std.tif".format(year))
+
+		print("Running {}".format(year))
+		get_statistics_for_year(rasters[year], year, year_mean, year_std,)
