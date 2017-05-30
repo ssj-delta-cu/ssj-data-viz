@@ -22,8 +22,8 @@ outputs = os.path.join(base_folder, "outputs")
 def lower_left_point(raster):
 	"""
 		Returns the lower left point for use when writing numpy arrays back to rasters
-	:param raster: 
-	:return: 
+	:param raster:
+	:return:
 	"""
 
 	if type(raster) is not arcpy.Raster:
@@ -45,11 +45,16 @@ def make_annual(raster_path, year,):
 	arcpy.env.outputCoordinateSystem = raster_path
 	arcpy.env.cellSize = raster_path
 
-	np_ras = arcpy.RasterToNumPyArray(raster_path)
+	np_ras = arcpy.RasterToNumPyArray(raster_path, nodata_to_value=0)
 	for band_index, band in enumerate(np_ras):
+		# print("Band Index: {}".format(band_index))
+		# print("Band has {} cells below 0 Min value {}".format((band<0).sum(), band.min()))
 		zero_fixed = np.where(band < 0, 0, band)  # take the input data and set all locations that are less than 0 ET to 0 and leave everything above 0 as is
+		# print("Fixed has {} cells below 0 Min value {}".format((zero_fixed < 0).sum(), zero_fixed.min()))
 		np_ras[band_index] = np.multiply(zero_fixed, get_days_in_month_by_band_and_year(band_index, year))  # multiply the band by the number of days in the month and replace it
+		# print("Stored has {} cells below 0. Min value {}".format((np_ras[band_index] < 0).sum(), np_ras[band_index].min()))
 	summed_months = np.sum(np_ras, axis=0)  # sum the bands together into one
+	# print("Summed has {} cells below 0. min value{}".format((summed_months < 0).sum(), summed_months.min()))
 
 	lower_left = lower_left_point(raster_path)
 
@@ -73,7 +78,7 @@ def get_statistics_for_year(rasters, year, mean_path, std_path, raster_base_path
 	:param mean_path: the path to output the mean raster to
 	:param std_path: the path to output the standard deviation raster to
 	:param raster_base_path: The folder that the rasters in the list live in
-	:param debug: 
+	:param debug: When True, writes intermediate annual rasters out to temp files beginning with "summed"
 	:return: 
 	"""
 	summed_rasters = []
@@ -149,4 +154,4 @@ if __name__ == "__main__":
 		year_std = os.path.join(output_folder, "{}_std.tif".format(year))
 
 		print("Running {}".format(year))
-		get_statistics_for_year(rasters[year], year, year_mean, year_std,)
+		get_statistics_for_year(rasters[year], year, year_mean, year_std, debug=False)
