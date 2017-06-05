@@ -1,0 +1,230 @@
+<PAMDataset>
+  <Metadata />
+  <Metadata domain="Esri">
+    <MDI key="PyramidResamplingType">NEAREST</MDI>
+  </Metadata>
+  <PAMRasterBand band="1">
+    <Histograms>
+      <HistItem>
+        <HistMin>-0.5</HistMin>
+        <HistMax>30.5</HistMax>
+        <BucketCount>31</BucketCount>
+        <IncludeOutOfRange>1</IncludeOutOfRange>
+        <Approximate>0</Approximate>
+        <HistCounts>0|109435|128385|364781|37355|248424|243197|173581|46502|429134|29503|37968|169886|26657|18852|26751|9378|18494|16507|5388|9749|3294|7080|33|26139|680|234172|282972|287102|375867|16152</HistCounts>
+      </HistItem>
+    </Histograms>
+    <GDALRasterAttributeTable>
+      <FieldDefn index="0">
+        <Name>OBJECTID</Name>
+        <Type>0</Type>
+        <Usage>0</Usage>
+      </FieldDefn>
+      <FieldDefn index="1">
+        <Name>Value</Name>
+        <Type>0</Type>
+        <Usage>0</Usage>
+      </FieldDefn>
+      <FieldDefn index="2">
+        <Name>Count</Name>
+        <Type>1</Type>
+        <Usage>0</Usage>
+      </FieldDefn>
+      <FieldDefn index="3">
+        <Name>LEVEL_2</Name>
+        <Type>2</Type>
+        <Usage>0</Usage>
+      </FieldDefn>
+      <Row index="0">
+        <F>1</F>
+        <F>1</F>
+        <F>109435</F>
+        <F>Riparian</F>
+      </Row>
+      <Row index="1">
+        <F>2</F>
+        <F>2</F>
+        <F>128385</F>
+        <F>Wet herbaceous/sub irrigated pasture</F>
+      </Row>
+      <Row index="2">
+        <F>3</F>
+        <F>3</F>
+        <F>364781</F>
+        <F>Alfalfa</F>
+      </Row>
+      <Row index="3">
+        <F>4</F>
+        <F>4</F>
+        <F>37355</F>
+        <F>Rice</F>
+      </Row>
+      <Row index="4">
+        <F>5</F>
+        <F>5</F>
+        <F>248424</F>
+        <F>Fallow</F>
+      </Row>
+      <Row index="5">
+        <F>6</F>
+        <F>6</F>
+        <F>243197</F>
+        <F>Pasture</F>
+      </Row>
+      <Row index="6">
+        <F>7</F>
+        <F>7</F>
+        <F>173581</F>
+        <F>Vineyards</F>
+      </Row>
+      <Row index="7">
+        <F>8</F>
+        <F>8</F>
+        <F>46502</F>
+        <F>Truck Crops</F>
+      </Row>
+      <Row index="8">
+        <F>9</F>
+        <F>9</F>
+        <F>429134</F>
+        <F>Corn</F>
+      </Row>
+      <Row index="9">
+        <F>10</F>
+        <F>10</F>
+        <F>29503</F>
+        <F>Forage Grass</F>
+      </Row>
+      <Row index="10">
+        <F>11</F>
+        <F>11</F>
+        <F>37968</F>
+        <F>Other Deciduous</F>
+      </Row>
+      <Row index="11">
+        <F>12</F>
+        <F>12</F>
+        <F>169886</F>
+        <F>Tomatoes</F>
+      </Row>
+      <Row index="12">
+        <F>13</F>
+        <F>13</F>
+        <F>26657</F>
+        <F>Safflower</F>
+      </Row>
+      <Row index="13">
+        <F>14</F>
+        <F>14</F>
+        <F>18852</F>
+        <F>Cucurbit</F>
+      </Row>
+      <Row index="14">
+        <F>15</F>
+        <F>15</F>
+        <F>26751</F>
+        <F>Pears</F>
+      </Row>
+      <Row index="15">
+        <F>16</F>
+        <F>16</F>
+        <F>9378</F>
+        <F>Cherries</F>
+      </Row>
+      <Row index="16">
+        <F>17</F>
+        <F>17</F>
+        <F>18494</F>
+        <F>Potatoes</F>
+      </Row>
+      <Row index="17">
+        <F>18</F>
+        <F>18</F>
+        <F>16507</F>
+        <F>Walnuts</F>
+      </Row>
+      <Row index="18">
+        <F>19</F>
+        <F>19</F>
+        <F>5388</F>
+        <F>Bush Berries</F>
+      </Row>
+      <Row index="19">
+        <F>20</F>
+        <F>20</F>
+        <F>9749</F>
+        <F>Turf</F>
+      </Row>
+      <Row index="20">
+        <F>21</F>
+        <F>21</F>
+        <F>3294</F>
+        <F>Sunflower</F>
+      </Row>
+      <Row index="21">
+        <F>22</F>
+        <F>22</F>
+        <F>7080</F>
+        <F>Olives</F>
+      </Row>
+      <Row index="22">
+        <F>23</F>
+        <F>23</F>
+        <F>33</F>
+        <F>Citrus</F>
+      </Row>
+      <Row index="23">
+        <F>24</F>
+        <F>24</F>
+        <F>26139</F>
+        <F>Almonds</F>
+      </Row>
+      <Row index="24">
+        <F>25</F>
+        <F>25</F>
+        <F>680</F>
+        <F>Pistachios</F>
+      </Row>
+      <Row index="25">
+        <F>26</F>
+        <F>26</F>
+        <F>234172</F>
+        <F>Semi-agricultural/ROW</F>
+      </Row>
+      <Row index="26">
+        <F>27</F>
+        <F>27</F>
+        <F>282972</F>
+        <F>Upland Herbaceous</F>
+      </Row>
+      <Row index="27">
+        <F>28</F>
+        <F>28</F>
+        <F>287102</F>
+        <F>Water</F>
+      </Row>
+      <Row index="28">
+        <F>29</F>
+        <F>29</F>
+        <F>375867</F>
+        <F>Urban</F>
+      </Row>
+      <Row index="29">
+        <F>30</F>
+        <F>30</F>
+        <F>16152</F>
+        <F>Floating Vegetation</F>
+      </Row>
+    </GDALRasterAttributeTable>
+    <Metadata>
+      <MDI key="STATISTICS_COVARIANCES">110.3418227706972</MDI>
+      <MDI key="STATISTICS_EXCLUDEDVALUES"></MDI>
+      <MDI key="STATISTICS_MAXIMUM">30</MDI>
+      <MDI key="STATISTICS_MEAN">14.365600407635</MDI>
+      <MDI key="STATISTICS_MINIMUM">1</MDI>
+      <MDI key="STATISTICS_SKIPFACTORX">1</MDI>
+      <MDI key="STATISTICS_SKIPFACTORY">1</MDI>
+      <MDI key="STATISTICS_STDDEV">10.504371602847</MDI>
+    </Metadata>
+  </PAMRasterBand>
+</PAMDataset>

@@ -16,3 +16,15 @@ rasters from the list associated with it. To add a new year for processing, add 
 of rasters to be processed for that year. Paths are relative to /spatial_comparisons in this repository, and any rasters
 listed should be placed in that folder.
 
+#### Handling the masking of data to crops
+The code theoretically auto-masks to the DSA and to crops so that the comparisons display as best as possible, but there are, of course,
+caveats. For any new year, you'll need to add a key to the land use dictionary with the path to the land use raster for that year.
+Make sure to provide the path to the band of the raster that has the appropriate codes.
+If land use codes change in a new year, update the `land_use_mask_query` to properly subset to the current codes. The query
+defines which codes to exclude, not include, and applies to all years, as currently constructed.
+
+Additionally, due to environment/version issues, the land use mask wouldn't generate in the same version of Python that
+was capable of running the rest of the code, so there is a flag `use_backup_masks` - try setting this to False first and see
+if the code completes. If it doesn't, you can manually generate new masks using a different version of Python using the
+unittest in test_spatial_comparisons.py named MaskTest, and then add the outputted mask to the backup_masks dictionary.
+

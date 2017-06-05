@@ -7,6 +7,8 @@ import arcpy
 
 import generate_spatial_comparisons as g
 
+base_path = os.path.split(os.path.split(__file__)[0])[0]
+"""
 class DateTest(unittest.TestCase):
 	def test_days_in_month(self):
 		self.assertEqual(g.get_days_in_month_by_band_and_year(4, 2015), 28)  # Feb 2015 has 28 days
@@ -16,7 +18,7 @@ class DateTest(unittest.TestCase):
 
 
 class GenerateDataTest(unittest.TestCase):
-	"""
+
 	def test_mean(self):
 
 		zero_lists = [[[1,1,1],
@@ -50,17 +52,25 @@ class GenerateDataTest(unittest.TestCase):
 		print(std_dev_raster)
 
 		g.get_statistics_for_year(rasters, 2016, mean_raster, std_dev_raster)
-	"""
+
 	def test_run_real_data(self):
-		base_path = os.path.split(os.path.split(__file__)[0])[0]
 		mean_output_2015 = os.path.join(base_path, "outputs", "2015_mean_test.tif")
 		std_output_2015 = os.path.join(base_path, "outputs", "2015_std_test.tif")
 		mean_output_2016 = os.path.join(base_path, "outputs", "2016_mean_test.tif")
 		std_output_2016 = os.path.join(base_path, "outputs", "2016_std_test.tif")
 		g.get_statistics_for_year(g.rasters[2015], 2015, mean_path=mean_output_2015, std_path=std_output_2015, raster_base_path=os.path.join(base_path, "spatial_comparisons"), debug=True)
 		g.get_statistics_for_year(g.rasters[2016], 2016, mean_path=mean_output_2016, std_path=std_output_2016, raster_base_path=os.path.join(base_path, "spatial_comparisons"), debug=True)
+"""
 
+class MaskTest(unittest.TestCase):
+	def setUp(self):
+		self.dsa_feature = r"C:\Users\dsx.AD3\Code\ssj-data-viz\templates\map-template\data\DeltaServiceArea.shp"
+		self.land_use_raster = r"C:\Users\dsx.AD3\Code\ssj-data-viz\spatial_comparisons\land_use_2015.tif"
 
+	def test_mask_creation(self):
+		mask = g.make_mask(self.land_use_raster, self.dsa_feature, g.land_use_mask_queries[2015])
+		with g.Env("overwriteOutput", True):
+			mask.save(os.path.join(base_path, "spatial_comparisons", "mask_2015.tif"))
 
 if __name__ == "__main__":
 	unittest.main()

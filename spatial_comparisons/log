@@ -1,0 +1,3 @@
+201706011121   0     1     0dsx C:\Users\dsx.AD3\Code\ssj-data-viz\spatial_comparisons\Extract_land1 = SELECTMASK(C:\Users\dsx.AD3\Code\ssj-data-viz\spatial_comparisons\land_use_2015.tif, C:\Temp\t_t282)
+201706011121   0     1     0dsx C:\Users\dsx.AD3\Code\ssj-data-viz\spatial_comparisons\SetNull_Extr1 = SETNULL(C:\Users\dsx.AD3\Code\ssj-data-viz\spatial_comparisons\Extract_land1, ( 1))
+201706011121   0     1     0dsx C:\Users\dsx.AD3\Code\ssj-data-viz\spatial_comparisons\SetNull_SetN1 = SETNULL(C:\Users\dsx.AD3\Code\ssj-data-viz\spatial_comparisons\SetNull_Extr1, ( 1))
