@@ -32,10 +32,10 @@ backup_masks = {2016: os.path.join(base_folder, r"spatial_comparisons\mask_2016.
 use_backup_mask = True
 """
 	OK - why am I doing this - the mask code works in Python 2.7/ArcMap, but hard crashes the interpreter in ArcGIS Pro.
-	The main block of code in this script runs into a memory error in 2.7 and runs fine in Pro. So, I generated masks
-	for each year using 2.7 and then ran the script in Pro, where when the mask code fails, it uses the backup masks
-	that were previously generated instead. Really silly, but have to move on right now and get this done. New masks
-	would need to be generated for new years, unless this code works next year (seems version and environment specific).
+	The main block of code in this script runs into a memory error in x86 Python 2.7 and runs fine in Pro (being x64).
+	So, I generated masks for each year using 2.7 and then ran the script in Pro, where when the mask code fails, it uses
+	the backup masks that were previously generated instead. Really silly, but have to move on right now and get this done.
+	New masks would need to be generated for new years, unless this code works next year (seems version and environment specific).
 """
 
 class Env(object):
