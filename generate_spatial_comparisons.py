@@ -12,18 +12,22 @@ elif six.PY3:
 
 #import amaptor
 
-rasters = {2015: ["itrc_et_wy2015_v2-1-0.tif", "ucd-pt_et_wy2015_v2-2-0.tif", "ucd-metric_et_wy2015_v2-0-0.tif", "sims_et_wy2015_v2-0-0.tif", "disalexi_et_wy2015_v2-1-0.tif", "calsimetaw_et_wy2015_v2-0-0.tif", "detaw_et_wy2015.tif"],
-		   2016: ["itrc_et_wy2016_v2-1-0.tif", "ucd-pt_et_wy2016_v2-2-0.tif", "ucd-metric_et_wy2016_v2-0-0.tif", "sims_et_wy2016_v2-0-0.tif", "disalexi_et_wy2016_v2-1-0.tif", "calsimetaw_et_wy2016_v2-0-2.tif", "detaw_et_wy2016.tif"]
+rasters = {2015: ["itrc_et_wy2015_v2-1-0.tif", "ucd-pt_et_wy2015_v2-2-0.tif", "ucd-metric_et_wy2015_v2-1-0.tif", "sims_et_wy2015_v2-0-0.tif", "disalexi_et_wy2015_v2-1-0.tif", "calsimetaw_et_wy2015_v2-0-0.tif", "detaw_et_wy2015.tif"],
+		   2016: ["itrc_et_wy2016_v2-1-0.tif", "ucd-pt_et_wy2016_v2-2-0.tif", "ucd-metric_et_wy2016_v2-1-0.tif", "sims_et_wy2016_v2-0-0.tif", "disalexi_et_wy2016_v2-1-0.tif", "calsimetaw_et_wy2016_v2-0-2.tif", "detaw_et_wy2016.tif"]
 		   }
 
-dsa_feature = r"C:\Users\dsx.AD3\Code\ssj-data-viz\templates\map-template\data\DeltaServiceArea.shp"
-land_use_rasters = {2015: r"C:\Users\dsx.AD3\Code\ssj-data-viz\spatial_comparisons\land_use_2015.tif",
-					2016: r"C:\Users\dsx.AD3\Projects\ssj-delta-cu\CALSIMETAW_land_use\landuse_2016.tif\Band_1"}
+base_folder = os.path.split(os.path.abspath(__file__))[0]
+template = os.path.join(base_folder, "templates", "map-template", "map-template.mxd")
+outputs = os.path.join(base_folder, "outputs")
+
+dsa_feature = os.path.join(base_folder, r"templates\map-template\data\DeltaServiceArea.shp")
+land_use_rasters = {2015: os.path.join(base_folder, r"spatial_comparisons\land_use_2015.tif"),
+					2016: r"C:\Users\dsx\Projects\ssj-delta-cu\CALSIMETAW_land_use\landuse_2016.tif\Band_1"}
 land_use_mask_queries = {2016: "Value > 1000 And Value <> 2003 And Value <> 2008",  # Which codes should be EXCLUDED
 						 2015: "LEVEL_2 not in ('Alfalfa', 'Safflower', 'Sunflower', 'Corn', 'Rice', 'Bush Berries', 'Vineyards', 'Potatoes', 'Cucurbit', 'Tomatoes', 'Truck Crops', 'Cherries', 'Olives', 'Pears', 'Citrus', 'Almonds', 'Pistachios', 'Walnuts', 'Pasture', 'Fallow', 'Semi-agricultural/ROW', 'Other Deciduous', 'Turf', 'Forage Grass', 'Wet herbaceous/sub irrigated pasture', 'Asparagus', 'Carrots', 'Young Orchard')"
 						}
-backup_masks = {2016: r"C:\Users\dsx.AD3\Code\ssj-data-viz\spatial_comparisons\mask_2016.tif",
-				2015: r"C:\Users\dsx.AD3\Code\ssj-data-viz\spatial_comparisons\mask_2015.tif"}
+backup_masks = {2016: os.path.join(base_folder, r"spatial_comparisons\mask_2016.tif"),
+				2015: os.path.join(base_folder, r"spatial_comparisons\mask_2015.tif")}
 
 use_backup_mask = True
 """
@@ -33,10 +37,6 @@ use_backup_mask = True
 	that were previously generated instead. Really silly, but have to move on right now and get this done. New masks
 	would need to be generated for new years, unless this code works next year (seems version and environment specific).
 """
-
-base_folder = os.path.split(os.path.abspath(__file__))[0]
-template = os.path.join(base_folder, "templates", "map-template", "map-template.mxd")
-outputs = os.path.join(base_folder, "outputs")
 
 class Env(object):
 	def __init__(self, env, value):
@@ -230,7 +230,6 @@ def get_days_in_month_by_band_and_year(band, year):
 if __name__ == "__main__":
 	print("Look for window asking for output directory, and choose output directory for rasters there")
 	output_folder = filedialog.askdirectory(title="Choose output folder to save summary rasters to")
-
 	with Env("overwriteOutput", True):
 		for year in rasters:  # runs for all years configured in rasters variable, outputing to selected folder
 			year_mean = os.path.join(output_folder, "{}_mean.tif".format(year))
