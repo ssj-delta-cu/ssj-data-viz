@@ -1,20 +1,20 @@
 import os
 import tempfile
 import six
+from collections import OrderedDict
 
 import arcpy
 import numpy as np
+import matplotlib.pyplot as plt
 
 if six.PY2:
 	import tkFileDialog as filedialog
 elif six.PY3:
 	from tkinter import filedialog
 
-#import amaptor
-
-rasters = {2015: ["itrc_et_wy2015_v2-1-0.tif", "ucd-pt_et_wy2015_v2-2-0.tif", "ucd-metric_et_wy2015_v2-1-0.tif", "sims_et_wy2015_v2-0-0.tif", "disalexi_et_wy2015_v2-1-0.tif", "calsimetaw_et_wy2015_v2-0-0.tif", "detaw_et_wy2015.tif"],
-		   2016: ["itrc_et_wy2016_v2-1-0.tif", "ucd-pt_et_wy2016_v2-2-0.tif", "ucd-metric_et_wy2016_v2-1-0.tif", "sims_et_wy2016_v2-0-0.tif", "disalexi_et_wy2016_v2-1-0.tif", "calsimetaw_et_wy2016_v2-0-2.tif", "detaw_et_wy2016.tif"]
-		   }
+rasters = OrderedDict([(2015, ["itrc_et_wy2015_v2-1-0.tif", "ucd-pt_et_wy2015_v2-2-0.tif", "ucd-metric_et_wy2015_v2-1-0.tif", "sims_et_wy2015_v2-0-0.tif", "disalexi_et_wy2015_v2-1-1.tif", "calsimetaw_et_wy2015_v2-0-0.tif", "detaw_et_wy2015.tif"]),
+					  (2016, ["itrc_et_wy2016_v2-1-0.tif", "ucd-pt_et_wy2016_v2-2-0.tif", "ucd-metric_et_wy2016_v2-1-0.tif", "sims_et_wy2016_v2-0-0.tif", "disalexi_et_wy2016_v2-1-0.tif", "calsimetaw_et_wy2016_v2-0-2.tif", "detaw_et_wy2016.tif"]),
+])
 
 base_folder = os.path.split(os.path.abspath(__file__))[0]
 template = os.path.join(base_folder, "templates", "map-template", "map-template.mxd")
@@ -140,7 +140,7 @@ def get_overall_mean(mean_raster):
 	:param mean_raster:
 	:return:
 	"""
-	mean_data = arcpy.RasterToNumPyArray(mean_raster, nodata_to_value=0)
+	mean_data = arcpy.RasterToNumPyArray(mean_raster, nodata_to_value=0)  # 0 is less than the minimum ET value, so should be safe and won't have collisions
 	total_values = np.count_nonzero(mean_data)  # get the total number of values
 	cell_sum = mean_data.sum()
 
@@ -212,6 +212,20 @@ def get_crop_mean(mean_raster, land_use_raster, variable, crop_code):
 	return get_overall_mean(crop_mean_raster)
 
 
+def histogram_from_raster(raster, name, output_folder, min_val=2000, max_val=12000, step=500):
+
+	np_array = arcpy.RasterToNumPyArray(raster)
+	one_dimensional_data = np.reshape(np_array, -1)
+
+	plt.style.use('ggplot')
+
+	fig = plt.figure()
+	numpy_hist = fig.add_subplot(111)
+	numpy_hist.set_title(name)
+	numpy_hist.set_xlabel("Mean ET (1/10 mm)")
+	numpy_hist.set_ylabel("Frequency")
+	hist = plt.hist(one_dimensional_data, bins=range(min_val, max_val, step))
+	fig.savefig(os.path.join(output_folder,"{}.png".format(name)))
 
 
 def get_statistics_for_year(rasters, year, mean_path, std_path, sd_mean_path, deviation_path, land_use, raster_base_path=os.path.join(base_folder, "spatial_comparisons",), debug=False):
@@ -254,6 +268,8 @@ def get_statistics_for_year(rasters, year, mean_path, std_path, sd_mean_path, de
 
 			mean_raster = arcpy.sa.CellStatistics(summed_rasters, "MEAN", "NODATA")
 			std_raster = arcpy.sa.CellStatistics(summed_rasters, "STD", "NODATA")
+
+			histogram_from_raster(mean_raster, "Histogram of mean ET for {}".format(year), output_folder=output_folder)
 
 			mean_raster.save(mean_path)
 			std_raster.save(std_path)
