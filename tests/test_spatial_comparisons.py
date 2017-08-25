@@ -62,6 +62,14 @@ class GenerateDataTest(unittest.TestCase):
 		g.get_statistics_for_year(g.rasters[2016], 2016, mean_path=mean_output_2016, std_path=std_output_2016, raster_base_path=os.path.join(base_path, "spatial_comparisons"), debug=True)
 """
 
+class HistogramTest(unittest.TestCase):
+	def setUp(self):
+		self.raster = os.path.join(base_path, "outputs", "tests", "2015_mean.tif")
+
+	def test_histogram_2015(self):
+		g.histogram_from_raster(raster=self.raster, name="Test Histogram 2015", output_folder=os.path.join(base_path, "outputs", "tests"))
+
+
 class MaskTest(unittest.TestCase):
 	def setUp(self):
 		self.dsa_feature = r"C:\Users\dsx.AD3\Code\ssj-data-viz\templates\map-template\data\DeltaServiceArea.shp"
@@ -71,6 +79,7 @@ class MaskTest(unittest.TestCase):
 		mask = g.make_mask(self.land_use_raster, self.dsa_feature, g.land_use_mask_queries[2015])
 		with g.Env("overwriteOutput", True):
 			mask.save(os.path.join(base_path, "spatial_comparisons", "mask_2015.tif"))
+
 
 if __name__ == "__main__":
 	unittest.main()

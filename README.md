@@ -16,6 +16,10 @@ rasters from the list associated with it. To add a new year for processing, add 
 of rasters to be processed for that year. Paths are relative to /spatial_comparisons in this repository, and any rasters
 listed should be placed in that folder.
 
+#### Caveats
+For some reason, every other time I run the code, it seems to crash with error 999999. Run it again and it should complete.
+We haven't had time to dig into why, but I suspect it's an ArcGIS issue somewhere.
+
 #### Handling the masking of data to crops
 The code theoretically auto-masks to the DSA and to crops so that the comparisons display as best as possible, but there are, of course,
 caveats. For any new year, you'll need to add a key to the land use dictionary with the path to the land use raster for that year.
